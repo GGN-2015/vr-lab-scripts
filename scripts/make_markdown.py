@@ -62,25 +62,47 @@ def get_user_group(iden: str):
 # 生成 markdown 文件内容
 def gen_index_md_content(json_obj):
     ans  = "---\n"
-    ans += "\n"
 
     # 姓名信息
+    ans += "# Display name\n"
     ans += "title: %s（%s）\n" % (json_obj["英文姓名"], json_obj["中文姓名"])
+    ans += "\n"
+
+    ans += "# Full Name (for SEO)\n"
     ans += "first_name: %s\n" % json_obj["英文名"]
     ans += "last_name: %s\n" % json_obj["英文姓"]
     ans += "\n"
 
     # 是否是教师
     is_teacher = ("true" if json_obj["是否是教师"] else "false")
+    ans += "# Is this the primary user of the site?\n"
     ans += "superuser: %s\n" % is_teacher
     ans += "\n"
 
-    # 身份填写
-    ans += "user_group: \n"
-    ans += "  - %s\n" % get_user_group(json_obj["身份"])
+    # 填写角色身份
+    if json_obj["年级"] and json_obj["学位"]: # 例如：2020 级青岛研院硕士
+        role = "%d 级%s\n" % (json_obj["年级"], json_obj["学位"])
+    elif json_obj["显示身份"]:
+        role = json_obj["显示身份"]
+    else:
+        role = "" # 不显示身份
+    ans += "# Role/position\n"
+    ans += "role: %s\n" % role # 角色一定要填写
     ans += "\n"
 
+    ans += "# Organizations/Affiliations\n"
+    ans += "organizations:\n"
+    ans += "  - name: Beihang University\n"
+    ans += "    url: ''\n"
+    ans += "\n"
+    ans += "# Short bio (displayed in user profile at end of posts)\n"
+    ans += "bio: \n\n\n"
+
     # 邮箱和谷歌学术
+    ans += "# Social/Academic Networking\n"
+    ans += "# For available icons, see: https://docs.hugoblox.com/getting-started/page-builder/#icons\n"
+    ans += "#   For an email link, use \"fas\" icon pack, \"envelope\" icon, and a link in the\n"
+    ans += "#   form \"mailto:your-email@example.com\" or \"#contact\" for contact widget.\n"
     ans += "social: \n"
     ans += "  - icon: envelope\n"
     ans += "    icon_pack: fas\n"
@@ -97,25 +119,16 @@ def gen_index_md_content(json_obj):
             ans += "  - %s\n" % term
     ans += "\n"
 
-    # 填写角色身份
-    if json_obj["年级"] and json_obj["学位"]: # 例如：2020 级青岛研院硕士
-        role = "%d 级%s\n" % (json_obj["年级"], json_obj["学位"])
-    elif json_obj["显示身份"]:
-        role = json_obj["显示身份"]
-    else:
-        role = "" # 不显示身份
-    ans += "role: %s\n" % role # 角色一定要填写
-    ans += "\n"
-
-    ans += "organizations:\n"
-    ans += "  - name: Beihang University\n"
-    ans += "    url: ''\n"
-    ans += "\n"
-    ans += "bio: \n\n"
+    ans += "# Enter email to display Gravatar (if Gravatar enabled in Config)\n"
     ans += "email: ''\n\n" # 这个是用来做无头像 avatar 的
 
     # 在作者列表中高亮老师的姓名吧
     ans += "highlight_name: %s\n" % is_teacher
+    ans += "\n"
+
+    # 身份填写
+    ans += "user_groups: \n"
+    ans += "  - %s\n" % get_user_group(json_obj["身份"])
     ans += "\n"
 
     # 开始 Markdown 正文
