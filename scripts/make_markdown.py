@@ -104,16 +104,22 @@ def gen_index_md_content(json_obj):
         role = json_obj["显示身份"]
     else:
         role = "" # 不显示身份
-    if role:
-        ans += "role: %s\n" % role
-        ans += "\n"
+    ans += "role: %s\n" % role # 角色一定要填写
+    ans += "\n"
+
+    ans += "organizations:\n"
+    ans += "  - name: Beihang University\n"
+    ans += "    url: ''\n"
+    ans += "\n"
+    ans += "bio: \n\n"
+    ans += "email: ''\n\n" # 这个是用来做无头像 avatar 的
 
     # 在作者列表中高亮老师的姓名吧
     ans += "highlight_name: %s\n" % is_teacher
     ans += "\n"
 
     # 开始 Markdown 正文
-    ans += "\n---\n\n"
+    ans += "---\n\n"
     ans += "# %s\n\n" % json_obj["中文姓名"]
     
     if role:
