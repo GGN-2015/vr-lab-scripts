@@ -12,8 +12,6 @@ output_dir = os.path.join(root_dir, "output")
 general_terms = [
     "英文姓名",
     "中文姓名",
-    "英文姓",
-    "英文名",
     "是否是教师",
     "身份", # 教师、学生、毕业生
     "显示身份", # 教授，副教授，[空白]
@@ -69,8 +67,8 @@ def gen_index_md_content(json_obj):
     ans += "\n"
 
     ans += "# Full Name (for SEO)\n"
-    ans += "first_name: %s\n" % json_obj["英文名"]
-    ans += "last_name: %s\n" % json_obj["英文姓"]
+    ans += "first_name: %s\n" % json_obj["英文姓名"].split()[0]
+    ans += "last_name: %s\n"  % json_obj["英文姓名"].split()[-1]
     ans += "\n"
 
     # 是否是教师
@@ -81,7 +79,7 @@ def gen_index_md_content(json_obj):
 
     # 填写角色身份
     if json_obj["年级"] and json_obj["学位"]: # 例如：2020 级青岛研院硕士
-        role = "%d 级%s\n" % (json_obj["年级"], json_obj["学位"])
+        role = "%s 级%s\n" % (json_obj["年级"], json_obj["学位"])
     elif json_obj["显示身份"]:
         role = json_obj["显示身份"]
     else:
