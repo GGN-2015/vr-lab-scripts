@@ -16,7 +16,7 @@ general_terms = [
     "英文名",
     "是否是教师",
     "身份", # 教师、学生、毕业生
-    "显示身份",
+    "显示身份", # 教授，副教授，[空白]
     "邮箱",
     "谷歌学术链接",
     "个人主页",
@@ -62,34 +62,40 @@ def get_user_group(iden: str):
 # 生成 markdown 文件内容
 def gen_index_md_content(json_obj):
     ans  = "---\n"
+    ans += "\n"
 
     # 姓名信息
     ans += "title: %s（%s）\n" % (json_obj["英文姓名"], json_obj["中文姓名"])
     ans += "first_name: %s\n" % json_obj["英文名"]
     ans += "last_name: %s\n" % json_obj["英文姓"]
+    ans += "\n"
 
     # 是否是教师
     is_teacher = ("true" if json_obj["是否是教师"] else "false")
     ans += "superuser: %s\n" % is_teacher
+    ans += "\n"
 
     # 身份填写
     ans += "user_group: \n"
     ans += "  - %s\n" % get_user_group(json_obj["身份"])
+    ans += "\n"
 
     # 邮箱和谷歌学术
     ans += "social: \n"
     ans += "  - icon: envelope\n"
-    ans += "  - icon_pack: fas\n"
-    ans += "  - link: 'mailto:%s\n" % json_obj["邮箱"]
+    ans += "    icon_pack: fas\n"
+    ans += "    link: 'mailto:%s'\n" % json_obj["邮箱"]
     ans += "  - icon: google-scholar\n"
-    ans += "  - icon_pack: ai\n"
-    ans += "  - link: %s\n" % json_obj["谷歌学术链接"]
+    ans += "    icon_pack: ai\n"
+    ans += "    link: '%s'\n" % json_obj["谷歌学术链接"]
+    ans += "\n"
 
     # 研究方向
     if json_obj["研究方向"]:
         ans += "interests:\n"
         for term in  json_obj["研究方向"]:
             ans += "  - %s\n" % term
+    ans += "\n"
 
     # 填写角色身份
     if json_obj["年级"] and json_obj["学位"]: # 例如：2020 级青岛研院硕士
@@ -100,22 +106,25 @@ def gen_index_md_content(json_obj):
         role = "" # 不显示身份
     if role:
         ans += "role: %s\n" % role
+        ans += "\n"
 
     # 在作者列表中高亮老师的姓名吧
     ans += "highlight_name: %s\n" % is_teacher
+    ans += "\n"
 
     # 开始 Markdown 正文
-    ans += "---\n"
-    ans += "# %s\n" % json_obj["中文姓名"]
+    ans += "\n---\n\n"
+    ans += "# %s\n\n" % json_obj["中文姓名"]
     
     if role:
-        ans += "%s\n" % role
+        ans += "%s\n\n" % role
 
     # 介绍
     for term_name in ["介绍", "个人履历", "教育背景", "科研经历", "毕业去向", "个人主页"]:
         if json_obj[term_name]:
             ans += "## %s\n" % term_name
             ans += "%s\n" % json_obj[term_name]
+            ans += "\n"
 
     return ans
 
