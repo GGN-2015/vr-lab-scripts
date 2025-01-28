@@ -8,6 +8,10 @@ avatar_dir = os.path.join(root_dir, "avatar")
 json_dir   = os.path.join(root_dir, "json")
 output_dir = os.path.join(root_dir, "output")
 
+# 删除旧的 output 文件夹
+shutil.rmtree(output_dir)
+os.makedirs(output_dir, exist_ok=True)
+
 # 学生和老师的公共属性
 general_terms = [
     "英文姓名",
@@ -36,11 +40,24 @@ student_terms = [
     "毕业去向",
 ]
 
+# 获取所有 dir 中的文件
+def get_all_file_in_dir(dir_now):
+    dir_now = os.path.abspath(dir_now) # 获得绝对路径
+    if os.path.isfile(dir_now):
+        return [dir_now]
+    if os.path.isdir(dir_now):
+        arr = []
+        for file in os.listdir(dir_now):
+            filepath = os.path.join(dir_now, file)
+            arr += get_all_file_in_dir(filepath)
+        return arr
+    return []
+
 # 所有文件拓展名必须为小写
 def get_all_json_file() -> list:
     return [
-        os.path.join(json_dir, file)
-        for file in os.listdir(json_dir)
+        file
+        for file in get_all_file_in_dir(json_dir)
         if file.endswith(".json")
     ]
 
