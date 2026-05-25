@@ -1,6 +1,9 @@
 # vr-lab-scripts
 用于维护实验室网站的 md 生成脚本
 
+- 网站主页：https://vr-pan-junjun.github.io/
+- 网站项目：https://github.com/vr-pan-junjun/vr-pan-junjun.github.io
+
 ## 如何新增学生/老师
 
 - 首先，确定学生的英文名称 `<英文名>`。
